@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6c79e9d4-080c-42ed-b714-d5e7ad2c6fbd" name="Default" comment="" />
+    <list default="true" id="6c79e9d4-080c-42ed-b714-d5e7ad2c6fbd" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/venues-with-loc-split-1.csv" afterPath="$PROJECT_DIR$/venues-with-loc-split-1.csv" />
+    </list>
     <ignored path="venuemap.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
