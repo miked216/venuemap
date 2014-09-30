@@ -3,36 +3,29 @@ package com.mikerach.venuemap;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 import java.io.*;
-import java.net.URL;
-
-import static com.mikerach.venuemap.LatLngResolver.LatLng;
 
 /**
- * Created by home on 26/09/14.
+ * Created by home on 30/09/14.
  */
-public class LatLngLookup {
+public class OverridesLookup {
 
-  private static final int SHARD = 2;
-  private static final String INPUT_FILE = "/home/home/projects/venuemap/venues-split-" + SHARD + ".csv";
-  private static final String OUTPUT_FILE = "/home/home/projects/venuemap/venues-with-loc-split-" + SHARD + ".csv";
+  private static final String INPUT_FILE = "/home/home/projects/venuemap/bad-locations.csv";
+  private static final String OUTPUT_FILE = "/home/home/projects/venuemap/venues-loc-overrides.csv";
 
   public static void main(String[] args) throws Exception {
     LatLngResolver latLngResolver = new LatLngResolver();
     PrintWriter out = new PrintWriter(new FileOutputStream(new File(OUTPUT_FILE),
-            true /* append = true */));
+        true /* append = true */));
 
     Reader in = new FileReader(INPUT_FILE);
     Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
 
     for (CSVRecord record : records) {
       String id = record.get(0).trim();
-      String postcode = record.get(6).trim().replaceAll("\\s*", "");
-      LatLng latLng = latLngResolver.getLatLng(postcode);
+      String postcode = record.get(1).trim().replaceAll("\\s*", "");
+      LatLngResolver.LatLng latLng = latLngResolver.getLatLng(postcode);
+
       StringBuilder line = new StringBuilder();
       line.append(id + ", "); // id
       line.append(record.get(2).trim() + ", "); // name
