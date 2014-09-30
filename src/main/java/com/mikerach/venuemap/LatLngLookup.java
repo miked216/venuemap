@@ -15,23 +15,24 @@ import java.net.URL;
  */
 public class LatLngLookup {
 
-  private static int SHARD = 1;
-  private static String FILE = "/home/home/projects/venuemap/venues-split-" + SHARD + ".csv";
+  private static final int SHARD = 2;
+  private static final String INPUT_FILE = "/home/home/projects/venuemap/venues-split-" + SHARD + ".csv";
+  private static final String OUTPUT_FILE = "/home/home/projects/venuemap/venues-with-loc-split-" + SHARD + ".csv";
 
   public static void main(String[] args) throws Exception {
 
-    PrintWriter out = new PrintWriter("/home/home/projects/venuemap/venues-with-loc-split-" + SHARD + ".csv");
+    PrintWriter out = new PrintWriter(new FileOutputStream(new File(OUTPUT_FILE),
+            true /* append = true */));
 
-    Reader in = new FileReader(FILE);
+    Reader in = new FileReader(INPUT_FILE);
     Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
 
     for (CSVRecord record : records) {
-
+      String id = record.get(0).trim();
       String postcode = record.get(6).trim().replaceAll("\\s*", "");
       LatLng latLng = getLatLng(postcode);
-
       StringBuilder line = new StringBuilder();
-      line.append(record.get(0).trim() + ", "); // id
+      line.append(id + ", "); // id
       line.append(record.get(2).trim() + ", "); // name
       line.append(postcode + ", "); // postcode
       line.append(latLng.getLat() + ", "); // lat
@@ -48,6 +49,9 @@ public class LatLngLookup {
   }
 
   private static LatLng getLatLng(String postcode) throws IOException {
+    if (postcode.length() < 3) {
+      return new LatLng(0, 0, true);
+    }
     JsonArray results = getResponse(postcode);
     JsonObject location;
     boolean approximation = false;
