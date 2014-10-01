@@ -19,10 +19,11 @@ public class LatLngResolver {
     if (postcode.length() < 3) {
       return new LatLng(0, 0, true);
     }
-    JsonArray results = getResponse(postcode);
+    JsonArray results;
     JsonObject location;
     boolean approximation = false;
     try {
+      results = getResponse(postcode);
       location = results.getJsonObject(0).getJsonObject("geometry").getJsonObject("location");
 
     } catch (Exception e) {
@@ -45,7 +46,7 @@ public class LatLngResolver {
 
   private static JsonArray getResponse(String postcode) throws IOException {
     //URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?output=json?key=AIzaSyDh8logL7iuHXbrZbppM_NgZFmN5G29gnk&&components=postal_code:" + postcode);
-    URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?output=json?key=AIzaSyDh8logL7iuHXbrZbppM_NgZFmN5G29gnk&components=postal_code:" + postcode);
+    URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?output=json?key=AIzaSyD7q_xoX2e1kuVNhrTqSZulHNMHlMLXGuY&components=postal_code:" + postcode);
     try (InputStream is = url.openStream();
          JsonReader rdr = Json.createReader(is)) {
       JsonObject obj = rdr.readObject();

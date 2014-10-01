@@ -42,7 +42,7 @@ public class ToJson {
         String lng = record.get(4).trim();
 
         //TODO remove this once shard 0 has been re-run
-        String approximation = record.size() == 6 ? record.get(5) : "false";
+        String approximation = record.size() == 6 ? record.get(5).trim() : "false";
 
         if ("0.0".equals(lat) && "0.0".equals(lng)) {
           System.out.println(String.format("Skipping %s %s %s", id, name, postcode));
