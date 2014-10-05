@@ -16,7 +16,7 @@ public class OverridesLookup {
   public static void main(String[] args) throws Exception {
     LatLngResolver latLngResolver = new LatLngResolver();
     PrintWriter out = new PrintWriter(new FileOutputStream(new File(OUTPUT_FILE),
-        true /* append = true */));
+        false /* append = true */));
 
     Reader in = new FileReader(INPUT_FILE);
     Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
