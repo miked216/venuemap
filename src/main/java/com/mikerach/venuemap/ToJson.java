@@ -4,6 +4,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 import javax.json.*;
+import javax.json.stream.JsonGenerator;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -34,21 +35,35 @@ public class ToJson {
       Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
 
       for (CSVRecord record : records) {
+        int size = record.size();
+
+        //id name postcode lat lng approx
+        //0  1    2        3   4   5
+
         String id = "id" + record.get(0).trim();
         String name = record.get(1).trim();
-        String postcode = record.get(2).trim();
 
-        String lat = record.get(3).trim();
-        String lng = record.get(4).trim();
+        int postcodeIndex = record.size() - 4;
+        int latIndex = record.size() - 3;
+        int lngIndex = record.size() - 2;
+        int approximationIndex = record.size() - 1;
 
-        //TODO remove this once shard 0 has been re-run
-        String approximation = record.size() == 6 ? record.get(5).trim() : "false";
+        String postcode = record.get(postcodeIndex).trim();
+        String lat = record.get(latIndex).trim();
+        String lng = record.get(lngIndex).trim();
+        String approximation = record.get(approximationIndex).trim();
+
+        // check valid values
+        Boolean.parseBoolean(approximation);
+        Float.parseFloat(lat);
+        Float.parseFloat(lng);
 
         if ("0.0".equals(lat) && "0.0".equals(lng)) {
-          System.out.println(String.format("Skipping %s %s %s", id, name, postcode));
+          //System.out.println(String.format("Skipping %s %s %s", id, name, postcode));
           expectedOverrides++;
           continue;
         }
+
         object.add(id, Json.createObjectBuilder()
             .add("id", id)
             .add("name", name)
@@ -60,9 +75,16 @@ public class ToJson {
       }
     }
 
+    System.out.println("Expect 55 overrides found " + expectedOverrides);
     JsonWriter writer = Json.createWriter(Files.newOutputStream(Paths.get(OUTPUT)));
     writer.writeObject(object.build());
     writer.close();
-    System.out.println("Overrides " + expectedOverrides);
+
+    String json = new String(Files.readAllBytes(Paths.get(OUTPUT)));
+    String prettyPrint = json.replaceAll("\\Q\"id\":\\E", "\n\"id\":");
+//    System.out.println(prettyPrint);
+    prettyPrint = "mikerach = {}\n" +
+        "mikerach.venues =\n" + prettyPrint;
+    Files.write(Paths.get(OUTPUT), prettyPrint.getBytes());
   }
 }

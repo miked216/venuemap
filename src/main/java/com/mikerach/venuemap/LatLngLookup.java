@@ -31,13 +31,6 @@ public class LatLngLookup {
 
     for (CSVRecord record : records) {
       String id = record.get(0).trim();
-
-      int i = 0;
-      if (Integer.parseInt(id) <= 2720) {
-        System.out.println("skipping " + id + " " + i++);
-        continue;
-      }
-
       String postcode = record.get(6).trim().replaceAll("\\s*", "");
       LatLng latLng = latLngResolver.getLatLng(postcode);
       StringBuilder line = new StringBuilder();
